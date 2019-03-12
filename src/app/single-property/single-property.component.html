@@ -1,0 +1,35 @@
+<div class="container">
+  <h1 class="display-4 mt-5 mb-0">{{ property.title }}</h1>
+  <hr class="bg-dark mb-4 mt-2">
+  <div class="row">
+    <div class="col-md-6">
+      <div *ngIf="property.photos.length == 1">
+        <div *ngFor="let photos of property.photos; let first = first;" class="w-10 my-auto">
+          <img [src]="photos" alt="Property photo" *ngIf="first" class="w-100">
+        </div>
+      </div>
+      <div *ngIf="property.photos.length > 1">
+        <div class="carousel slide bg-dark" data-ride="carousel" id="photosCarousel">
+          <div class="carousel-inner">
+            <div *ngFor="let photo of property.photos; let first = first" [ngClass]="{'active': first}" class="carousel-item">
+              <img [src]="photo" alt="Property photo" class="d-block w-100">
+            </div>
+          </div>
+          <a href="#photosCarousel" role="button" data-slide="prev" class="carousel-control-prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a href="#photosCarousel" role="button" data-slide="next" class="carousel-control-next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="font-weight-normal">{{ property.price }} €</h3>
+      <p class="font-weight-light">{{ property.category }} de {{ property.surface }} m², {{ property.rooms }} pièce(s)</p>
+      <p class="font-weight-light">{{ property.description }}</p>
+    </div>
+  </div>
+</div>

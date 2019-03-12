@@ -1,0 +1,94 @@
+<div class="rounded shadow bg-white p-5">
+  <div class="row">
+    <div class="col-12 d-flex">
+      <h2 class="font-weight-light"><i class="fas fa-home"></i> Biens immobiliers</h2>
+      <button class="btn btn-primary ml-auto" type="button" (click)="resetPropertyForm()" data-toggle="modal" data-target="#propertiesFormModal"><i class="fas fa-plus"></i> Ajouter un bien</button>
+    </div>
+  </div>
+  <hr class="mt-1 mb-5 bg-dark">
+  <div class="row">
+    <div *ngFor="let property of properties; let i = index" class="col-12 shadow-sm p-4 mb-3 bg-light">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="w-100" *ngFor="let photos of property.photos; let first = first">
+              <img *ngIf="first" [src]="photos" alt="Property photo" style="width: 150px;">
+          </div>
+          <h4 *ngIf="!property.photos || property.photos.length == 0" class="font-weight-light">Pas de photo</h4>
+        </div>
+        <div class="col-md-10">
+          <h3 class="font-weight-normal pl-3">{{ property.title }}</h3>
+          <h4 class="font-weight-light pl-3">{{ property.price }} €</h4>
+          <div class="row">
+            <div class="ml-auto">
+              <button class="btn btn-primary m-1" (click)="onEditProperty(property, i)"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-danger m-1" (click)="onDeleteProperty(property)"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p>{{ property.category }} de {{ property.surface }} m², {{ property.rooms }} pièce(s)</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="propertiesFormModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="rounded shadow bg-white p-5">
+        <h3 class="font-weight-light">Nouveau bien</h3>
+        <hr class="mt-0 bg-dark">
+        <form [formGroup]="propertyForm" class="py-5" (ngSubmit)="onSaveProperty()">
+          <input type="text" formControlName="id" hidden>
+          <div class="form-group">
+            <input type="text" formControlName="title" id="title" placeholder="Titre" class="form-control">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label for="category" class="input-group-text">Catégorie</label>
+            </div>
+            <select formControlName="category" id="category" class="custom-select">
+              <option value="appartement">Appartement</option>
+              <option value="maison">Maison</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="input-group mb-0">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Ajouter une image</span>
+              </div>
+              <div class="custom-file">
+                <input type="file" id="photo" (change)="detectFile($event)" aria-describedby="inputGroupFileAddon01" accept="image/*" class="custom-file-input">
+                <label for="photo" class="custom-file-label">Choisir...</label>
+              </div>
+            </div>
+            <small class="text-warning" *ngIf="photoUploading">Chargement...</small>
+            <small class="text-success" *ngIf="photoUploaded">Fichier chargé</small>
+          </div>
+          <div class="row">
+            <div *ngFor="let photo of photosAdded; let i = index" class="col-4 position-relative border border-secondary rounded m-1 p-1 bg-light">
+              <span class="text-danger position-absolute deletePhoto mr-1" (click)="onRemoveAddedPhoto(i)"><i class="fas fa-times"></i></span>
+              <img [src]="photo" alt="photo" class="w-100">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-6">
+                <input type="text" id="surface" formControlName="surface" placeholder="Surface (m²)" class="form-control">
+              </div>
+              <div class="col-6">
+                <input type="text" id="rooms" formControlName="rooms" placeholder="Nombre de pièces" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <input type="text" id="price" formControlName="price" placeholder="Prix (€)" class="form-control">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="description" placeholder="Description" formControlName="description" rows="3"></textarea>
+          </div>
+          <button class="btn btn-primary float-right" type="submit" [disabled]="propertyForm.invalid">Enregistrer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
